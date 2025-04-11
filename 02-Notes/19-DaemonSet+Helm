@@ -1,0 +1,8 @@
+What is DaemonSet ?
+
+It is an object in Kubernetes which ensure that all pods are running efficciently in cluster in that we used prometheus, loki, promtail, grafana
+
+
+What is Helm ?
+It is kubernetes package manager which helps to install/Uninstall the
+kubernetes application like prometheus loki promtail
