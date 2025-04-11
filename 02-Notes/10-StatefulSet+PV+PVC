@@ -1,0 +1,78 @@
+What is StatefulSet+PV+PVC ---> Called as Static Provisioning ?
+
+StatefulSet is used for database pods where PersistanceVolume(PV) is used to define the desired volume based on our requirement we
+define and Storage Class is used for dynamic volume as per user requirement request PersistanceVolumeCliam(PVC) is used to connect
+the PersistanceVolume(PV) to StatefulSet pods
+
+Example: 1. PersistentVolume (PV).yaml
+
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mnt/data"  # Change based on your setup
+
+
+
+Example: 2. PersistentVolumeClaim (PVC).yaml
+
+
+    apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+
+
+Examole: 3. StatefulSet (StatefulSet.yaml)
+
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-statefulset
+spec:
+  serviceName: my-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-container
+          image: nginx
+          volumeMounts:
+            - name: data-volume
+              mountPath: "/data"
+  volumeClaimTemplates:
+    - metadata:
+        name: data-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+
+
+
+
+
