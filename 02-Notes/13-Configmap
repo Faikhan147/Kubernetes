@@ -1,0 +1,15 @@
+What is Configmap ?
+
+It is used to store the non-sensitive information like Ports, Hostnames, Database name
+
+Example:configmap.yaml
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rds-configmap
+data:
+  MYSQL_DATABASE: "faisal-mysql-db"
+  MYSQL_HOST: faisal-mysql-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com     # Replace with your RDS MYSQL Endpoint
+  MYSQL_PORT: "3306"
