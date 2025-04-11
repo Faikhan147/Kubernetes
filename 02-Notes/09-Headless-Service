@@ -18,3 +18,9 @@ spec:
     - protocol: TCP
       port: 3306
       targetPort: 3306
+
+
+
+
+
+NOTE: clusterIP: None ka matlab hai Kubernetes is service ke liye cluster IP assign nahi karega. Headless service mainly StatefulSets ke sath use hoti hai jahan 
