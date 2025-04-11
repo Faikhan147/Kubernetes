@@ -1,0 +1,14 @@
+What is External Name ?
+
+It helps to connect the third party resources like Amazon RDS, APIs
+
+Example:external-name.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-service
+spec:
+  type: ExternalName
+  externalName: mydb.example.com  # You can replace this with your Amazon RDS endpoint
