@@ -1,0 +1,69 @@
+StatefulSet+Storage Class ---> called as Dynamic Provisioning ?
+
+
+Example: 1. StorageClass.yaml
+
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: my-storage-class
+provisioner: kubernetes.io/aws-ebs  # Change based on your cloud provider
+parameters:
+  type: gp2                         # EBS volume type (e.g., gp3, io1)
+  fsType: ext4
+
+
+
+NOTE: AWS ke liye provisioner: kubernetes.io/aws-ebs valid hai (legacy), but latest versions may use:
+provisioner: ebs.csi.aws.com
+
+Agar aap GCP ya Azure use kar rahe ho, toh provisioner accordingly change karna hoga:
+
+GCP: kubernetes.io/gce-pd
+
+Azure: kubernetes.io/azure-disk ya disk.csi.azure.com
+
+
+
+Example: 2. StatefulSet for StorageClass.yaml
+
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-statefulset
+spec:
+  serviceName: my-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-container
+          image: nginx
+          volumeMounts:
+            - name: data-volume
+              mountPath: "/data"
+  volumeClaimTemplates:
+    - metadata:
+        name: data-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: my-storage-class  # Uses StorageClass for dynamic PV provisioning
+        resources:
+          requests:
+            storage: 5Gi
+
+
+
+
+Note : the PVCs are automatically created by volumeClaimTemplates in the StatefulSet and we define volume in StatefulSet for security due to
+Storage Class and we define storageClassName in StatefulSet for storage class
+
