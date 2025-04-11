@@ -17,3 +17,9 @@ spec:
       port: 80
       targetPort: 8080
   type: LoadBalancer
+
+
+
+
+NOTE: Agar aap AWS, GCP, ya Azure jaise cloud provider par ho, toh yeh service external IP assign karegi. 
+Minikube mein ise simulate karne ke liye minikube tunnel use karna padta hai.
