@@ -1,0 +1,25 @@
+What is Deployment ?
+
+It is a better version of ReplicaSet that allows features like scaling, updates, and rollback
+
+Example:deployment.yaml
+Let's say you want 3 NGINX pods with version 1.21. You define a Deployment like this
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
