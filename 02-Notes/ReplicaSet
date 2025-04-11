@@ -1,0 +1,25 @@
+What is ReplicaSet ?
+
+It is a better version of Replication Controller allows more flexible way to match pods it used Selectors and Lables for more efficciently to managing pods
+
+Example:replicaset.yaml
+Let’s say you want always 3 NGINX pods running. You define a ReplicaSet like this:
+
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
