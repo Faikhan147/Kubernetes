@@ -4,5 +4,5 @@ It is an object in Kubernetes which ensure that all pods are running efficcientl
 
 
 What is Helm ?
-It is kubernetes package manager which helps to install/Uninstall the
-kubernetes application like prometheus loki promtail
+
+It is kubernetes package manager which helps to install/Uninstall the kubernetes application like prometheus loki promtail
