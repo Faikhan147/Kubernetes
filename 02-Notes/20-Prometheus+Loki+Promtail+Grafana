@@ -1,0 +1,19 @@
+What is Prometheus ?
+
+It is a open-source monitoring tool which helps to collects the Metrics like CPU Usage, Memory, Nerworks etc
+
+
+What is Loki ?
+
+It is open-source logging tool which used to and save the logs of pods, Services, Metrics, Namespace from promtail
+
+
+
+What is Promtail ?
+
+It is open-source logging tool which used to and save the logs from Pods, Services, Metrics, Namespace
+
+
+What is Grafana ?
+
+It is a open-source monitoring tool which helps to visualize the data like prometheus data or logging data in the form of dashboard
