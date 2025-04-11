@@ -12,3 +12,10 @@ metadata:
 spec:
   type: ExternalName
   externalName: mydb.example.com  # You can replace this with your Amazon RDS endpoint
+
+
+
+
+
+NOTE: Is service ka use tab hota hai jab aap Kubernetes cluster se kisi external resource (like Amazon RDS) ko DNS ke through access karna chahte ho.
+port yahan define nahi karte, kyunki DNS resolution ho raha hota hai directly.
