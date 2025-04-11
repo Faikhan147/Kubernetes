@@ -1,0 +1,4 @@
+What is RBAC ?
+
+It is Role-Based-Access-Control is helps provide permissions like (Read, Write, Execute) on pods, services, namespace to User, Group, and
+Service Accounts in that we have Role, Role-Binding
