@@ -1,0 +1,118 @@
+kubectl apply -f nginx-deployment.yaml   
+kubectl apply -f nginx-loadbalancer.yaml
+cd C:\Users\faisa\OneDrive\Documents\EKS-CLUSTER-LOAD BALANCER
+wsl
+sudo npm init -y
+sudo npm install express mysql pg oracledb
+sudo docker build -t faisalkhan45/backend-app .
+docker login -u faisalkhan45
+docker push faisalkhan45/backend-app
+kubectl apply -f rds-secrets.yaml
+kubectl apply -f rds-configmap.yaml
+kubectl apply -f service-account.yaml
+kubectl apply -f role.yaml
+kubectl apply -f rolebinding.yaml
+kubectl apply -f  Backend-app-pod.yaml
+kubectl exec -it my-backend-app-pod -- /bin/bash
+
+mysql -h faisal-mysql-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com -u FaisalKhan -p
+CREATE DATABASE faisal_db;
+SHOW DATABASES;
+mysql -h faisal-mysql -u FaisalKhan -p
+
+
+
+sqlplus FaisaLKhan@//faisal-oracle-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com:1521/ORCL
+CREATE USER "faisal_db" IDENTIFIED BY Faisalkhan35$;
+SELECT username FROM all_users;
+SELECT username FROM all_users WHERE username = 'faisal_db';
+sqlplus FaisaLKhan@//faisal-oracle:1521/ORCL
+
+
+psql -h faisal-postgresql-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com -U FaisalKhan -d postgres
+CREATE DATABASE faisal_db;
+SELECT datname FROM pg_database;
+psql -h faisal-postgresql -U FaisalKhan -d postgres
+
+
+2.
+
+kubectl apply -f mysql-client.yaml
+kubectl exec -it mysql-client -- /bin/bash
+mysql -h faisal-mysql-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com -u FaisalKhan -p
+CREATE DATABASE faisal_db;
+SHOW DATABASES;
+mysql -h faisal-mysql -u FaisalKhan -p
+
+
+
+3.
+kubectl apply -f oracle-client.yaml
+kubectl exec -it oracle-client -- /bin/bash
+sqlplus FaisaLKhan@//faisal-oracle-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com:1521/ORCL
+CREATE USER "faisal_db" IDENTIFIED BY Faisalkhan35$;
+SELECT username FROM all_users;
+SELECT username FROM all_users WHERE username = 'faisal_db';
+sqlplus FaisaLKhan@//faisal-oracle:1521/ORCL
+
+
+4.
+kubectl apply -f postgresql-client.yaml
+kubectl exec -it postgresql-client -- /bin/bash
+psql -h faisal-postgresql-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com -U FaisalKhan -d postgres
+CREATE DATABASE faisal_db;
+SELECT datname FROM pg_database;
+psql -h faisal-postgresql -U FaisalKhan -d postgres
+
+
+kubectl apply -f external-name.yaml
+
+
+kubectl apply -f nginx-ingress.yaml
+
+
+
+
+
+
+kubectl get nodes
+kubectl get pods
+kubectl get svc
+kubectl get ingress
+
+
+
+
+
+
+
+2.
+kubectl create namespace monitoring
+kubectl apply -f prometheus-daemonset.yaml
+kubectl apply -f prometheus-rbac.yaml
+kubectl apply -f loki-daemonset.yaml
+kubectl apply -f promtail-daemonset.yaml
+kubectl apply -f grafana-deployment.yaml  
+kubectl apply -f prometheus-nodeport-service.yaml
+kubectl apply -f loki-service-nodeport.yaml
+
+
+kubectl get pods -n monitoring
+kubectl get services -n monitoring
+
+http://<NodeIP>:30080--fore Grafana
+http://<node-ip>:30090--for prometheus
+process_cpu_seconds_total{} this on promethus 
+process_network_receive_bytes_total{} for netwoks
+
+
+
+
+
+
+
+
+
+
+
+

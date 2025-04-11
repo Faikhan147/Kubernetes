@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: oracle-client
+spec:
+  containers:
+    - name: oracle-client
+      image: ghcr.io/oracle/oraclelinux8-instantclient:21  # Oracle Instant Client image
+      command: [ "sleep", "infinity" ]  # Keeps the container running for exec access

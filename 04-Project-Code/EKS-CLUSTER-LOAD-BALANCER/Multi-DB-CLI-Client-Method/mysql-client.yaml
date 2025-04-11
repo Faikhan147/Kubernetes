@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-client
+spec:
+  containers:
+  - name: mysql
+    image: mysql:latest  # Prebuilt MySQL client image from Docker Hub
+    command: [ "sleep", "infinity" ]  # Keeps the container running
