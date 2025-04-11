@@ -1,0 +1,19 @@
+What is LoadBalancer ?
+
+It is used to expose the pods via LoadBalancer DNS
+
+Example:load-balancer.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-loadbalancer-service
+spec:
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
