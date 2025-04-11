@@ -1,0 +1,28 @@
+What is Role-Binding ? 
+
+It define the to whom we assign the permissions like User, Group, Service Accounts
+
+
+Example: role-binding.yaml-->Define permissions to User, Group
+
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-access-binding
+  namespace: default  # Change as needed
+subjects:
+  # Bind to a specific user
+  - kind: User
+    name: "Faisal"  # Replace with actual username
+    apiGroup: rbac.authorization.k8s.io
+
+  # Bind to a group
+  - kind: Group
+    name: "dev-team"  # Replace with actual group name
+    apiGroup: rbac.authorization.k8s.io
+
+roleRef:
+  kind: Role
+  name: pod-read-write-execute-role  # Must match the Role name
+  apiGroup: rbac.authorization.k8s.io
