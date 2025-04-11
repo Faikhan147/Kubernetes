@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql-configmap
-data:
-  MYSQL_DATABASE: "faisal-db"
-  MYSQL_HOST: "mysql-headless-service"
-  MYSQL_PORT: "3306"
