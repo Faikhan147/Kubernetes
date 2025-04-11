@@ -1,0 +1,20 @@
+What is Headless ?
+
+It is service used for database it helps to sync the data between the remaining database pods where in that one pod is write permission i.e is
+Headless pod connected between Deployment and database pods and database pods the read the data and sync to each other
+
+Example:headless.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-headless
+spec:
+  clusterIP: None  # It enables the Headless service
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
