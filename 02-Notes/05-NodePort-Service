@@ -1,0 +1,20 @@
+What is NodePort ?
+
+It is used to expose the pods outside via NodePort or WorkerNode
+
+Example:nodeport.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nodeport-service
+spec:
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30008  # Must be in range 30000-32767
+  type: NodePort
