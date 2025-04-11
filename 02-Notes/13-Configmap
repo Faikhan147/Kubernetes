@@ -2,7 +2,7 @@ What is Configmap ?
 
 It is used to store the non-sensitive information like Ports, Hostnames, Database name
 
-Example:configmap.yaml
+Example: 1. configmap.yaml
 
 
 apiVersion: v1
@@ -13,3 +13,39 @@ data:
   MYSQL_DATABASE: "faisal-mysql-db"
   MYSQL_HOST: faisal-mysql-db.clis8ywwg5wd.eu-north-1.rds.amazonaws.com     # Replace with your RDS MYSQL Endpoint
   MYSQL_PORT: "3306"
+
+
+
+NOTE: ConfigMAp ko hum Database Pod me inject karsakte hai
+
+
+
+Example: 2.Pod.yaml
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-client-pod
+spec:
+  containers:
+    - name: mysql-client
+      image: mysql:8
+      command: ["sleep", "3600"]  # Keeps the pod running
+      env:
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: rds-configmap
+              key: MYSQL_DATABASE
+        - name: MYSQL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: rds-configmap
+              key: MYSQL_HOST
+        - name: MYSQL_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: rds-configmap
+              key: MYSQL_PORT
+
