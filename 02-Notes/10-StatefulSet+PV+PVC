@@ -10,7 +10,9 @@ Example: 1. PersistentVolume (PV).yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: my-pv
+  name: pv-0
+  labels:
+    storage: mysql
 spec:
   capacity:
     storage: 5Gi
@@ -18,7 +20,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/mnt/data"  # Change based on your setup
+    path: "/mnt/data0"
 
 
 
