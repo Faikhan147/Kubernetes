@@ -1,7 +1,7 @@
 What is StatefulSet+PV+PVC ---> Called as Static Provisioning ?
 
 StatefulSet is used for database pods where PersistanceVolume(PV) is used to define the desired volume based on our requirement we
-define and Storage Class is used for dynamic volume as per user requirement request PersistanceVolumeCliam(PVC) is used to connect
+define and we can retain it with the help of  policy and Storage Class is used for dynamic volume as per user requirement request PersistanceVolumeCliam(PVC) is used to connect
 the PersistanceVolume(PV) to StatefulSet pods
 
 Example: 1. PersistentVolume (PV).yaml
