@@ -12,7 +12,7 @@ kind: PersistentVolume
 metadata:
   name: pv-0
   labels:
-    storage: mysql
+    app: mysql
 spec:
   capacity:
     storage: 5Gi
