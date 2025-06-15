@@ -73,12 +73,12 @@ spec:
           ports:
             - containerPort: 3306
           volumeMounts:
-            - name: mysql-pv
+            - name: mysql-pvc
               mountPath: "/var/lib/mysql"
 
   volumeClaimTemplates:
     - metadata:
-        name: mysql-pv
+        name: mysql-pvc
       spec:
         accessModes:
           - ReadWriteOnce
