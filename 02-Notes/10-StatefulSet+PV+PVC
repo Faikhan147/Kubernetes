@@ -10,9 +10,9 @@ Example: 1. PersistentVolume (PV).yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-0
+  name: mysql-pv-0
   labels:
-    app: mysql-pv-0
+    app: pv-0
 spec:
   capacity:
     storage: 5Gi
@@ -71,27 +71,27 @@ spec:
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                   name: mysql-config
+                   name: mysql-configmaps
                    key: database
-            - name: MYSQL_USER
+            - name: MYSQL_USERNAME
               valueFrom:
                 secretKeyRef:
-                   name: mysql-secret
+                   name: mysql-secrets
                    key: username
-            - name: MYSQL_PASSWORD
+            - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                   name: mysql-secret
+                   name: mysql-secrets
                    key: password
           ports:
             - containerPort: 3306
           volumeMounts:
-            - name: mysql-pvc
+            - name: mysql-pvc-0
               mountPath: "/var/lib/mysql"
 
   volumeClaimTemplates:
     - metadata:
-        name: mysql-pvc
+        name: mysql-pvc-0
       spec:
         accessModes:
           - ReadWriteOnce
@@ -100,4 +100,4 @@ spec:
             storage: 5Gi
         selector:
           matchLabels:
-            app: mysql-pv-0
+            app: pv-0
