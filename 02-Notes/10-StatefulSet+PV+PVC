@@ -7,7 +7,7 @@ the PersistanceVolume(PV) to StatefulSet pods
 Example: 1. PersistentVolume (PV).yaml
 
 
-apiVersion: v1
+apiVersion: v1                                                                       
 kind: PersistentVolume
 metadata:
   name: mysql-pv-0
@@ -21,6 +21,27 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: "/mnt/data0"
+
+
+
+or 
+Example: 1. PersistentVolume (PV).yaml  in AWS EBS
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ebs-static-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  awsElasticBlockStore:
+    volumeID: vol-0a1b2c3d4e5f6g7h8   # <-- tumhara real volumeID yahan aayega
+    fsType: ext4
+
 
 
 
