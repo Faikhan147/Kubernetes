@@ -83,7 +83,7 @@ spec:
         resources:
           requests:
             storage: 5Gi
-        storageClassName: my-storage-class
+        storageClassName: mysql-ebs-pv-0
 
 
 
