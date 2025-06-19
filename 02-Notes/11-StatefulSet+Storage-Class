@@ -13,7 +13,6 @@ parameters:
   type: io1
   fsType: ext4
   iopsPerGB: "10"         # optional, AWS minimum iops requirement
-  encrypted: "true"       # optional
 
 
 
