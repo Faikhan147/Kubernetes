@@ -7,8 +7,8 @@ Example: 1. StorageClass.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: gp3-storage-class
-provisioner: ebs.csi.aws.com
+  name: mysql-ebs-pv-0
+provisioner: kubernetes.io/aws-ebs
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Retain
 parameters:
