@@ -28,18 +28,21 @@ Example: 1. PersistentVolume (PV).yaml  in AWS EBS
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mysql-ebs-pv-0
+  name: mysql-pv-0
 spec:
   capacity:
     storage: 5Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  awsElasticBlockStore:
-    volumeID: vol-00482bedc6c38d18c   # <-- tumhara real volumeID yahan aayega
+  csi:
+    driver: ebs.csi.aws.com
+    volumeHandle: vol-0a13de06d2ac235e4
     fsType: ext4
 
 
+NOTE : this droiver need to be  install
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.28"
 
 
 Example: 2. PersistentVolumeClaim (PVC).yaml
