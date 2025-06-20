@@ -2,32 +2,7 @@ What is Role ?
 
 It define permissions like Read, Write, Execute
 
-Example: role.yaml--> Granting Read, Write, Execute to pods
-
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: pod-read-write-execute-role
-  namespace: default  # Change as needed
-rules:
-  # Read permissions
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["get", "list", "watch"]
-    
-  # Write permissions
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["create", "update", "patch", "delete"]
-    
-  # Execute permissions
-  - apiGroups: [""]
-    resources: ["pods/exec"]
-    verbs: ["create"]
-
-
-
+Example: role.yaml--> Granting Read, Write, Execute Resources
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -35,13 +10,13 @@ metadata:
   name: full-control
   namespace: default
 rules:
+  # Read + Write
   - apiGroups: ["", "apps", "batch", "networking.k8s.io"]
     resources: ["pods", "services", "configmaps", "secrets", "persistentvolumeclaims", "deployments", "replicasets", "statefulsets", "ingresses", "jobs", "cronjobs"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
-
+  # Exec permission for kubectl exec
   - apiGroups: [""]
-    resources:
-      - pods/exec
+    resources: [ pods/exec ]
     verbs: ["create"]
 
