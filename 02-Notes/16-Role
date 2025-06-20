@@ -36,5 +36,12 @@ metadata:
   namespace: default
 rules:
   - apiGroups: ["", "apps", "batch", "networking.k8s.io"]
-    resources: ["pods", "services", "configmaps", "secrets", "persistentvolumeclaims", deployments", "replicasets", "statefulsets, "headless", "ingress", "jobs", "cronjobs"]
+    resources: ["pods", "services", "configmaps", "secrets", "persistentvolumeclaims", "deployments", "replicasets", "statefulsets", "ingresses", "jobs", "cronjobs"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+
+  - apiGroups: [""]
+    resources:
+      - pods/exec
+    verbs: ["create"]
+
