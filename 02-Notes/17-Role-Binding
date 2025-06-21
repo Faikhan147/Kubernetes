@@ -25,7 +25,7 @@ subjects:
   # Bind to a Service Account
   - kind: ServiceAccount
     name: sa
-    apiGroup: rbac.authorization.k8s.io
+    namespace: default
 
 roleRef:
   kind: Role
