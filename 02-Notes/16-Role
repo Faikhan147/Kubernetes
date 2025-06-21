@@ -106,7 +106,7 @@ rules:
 
 
 
-uses of resources 
+uses of resources :-
 
 
 
@@ -145,7 +145,6 @@ kubectl apply -f pod.yaml
 
 
 kubectl delete pod my-pod
-kubectl delete -f service.yaml
 
 ✅ patch
 📌 Purpose: Resource me chhoti si update karna bina puri YAML file diye
@@ -159,3 +158,19 @@ kubectl patch pod my-test-pod -p '{"metadata":{"annotations":{"patched-by":"fais
 📦 Example:
 
 kubectl replace -f pod.yaml
+
+
+
+Verb	  Zaroori kab hai
+create	jab apply se naya resource ban raha ho
+update	jab apply se existing resource modify ho
+
+
+
+
+Scenario	Required Verb(s)	Works?
+kubectl create -f file.yaml	create	✅ Yes
+kubectl apply -f file.yaml (new)	create + get	✅ Yes
+kubectl apply -f file.yaml (existing)	get + update	✅ Yes
+kubectl replace -f file.yaml	update	✅ Yes only if update is allowed
+kubectl replace -f file.yaml	create only	❌ No (Fails)
