@@ -102,3 +102,60 @@ rules:
   - apiGroups: [""]
     resources: ["pods/log"]
     verbs: ["get"]
+
+
+
+
+uses of resources 
+
+
+
+✅ get
+📌 Purpose: Single resource ya list me se ek resource ka detail dekhna
+📦 Example:
+
+kubectl get pod pod-name
+kubectl describe pod pod-name
+
+✅ list
+📌 Purpose: Ek type ke saare resources ki list lana
+📦 Example:
+
+
+kubectl get pods         # sab pods ka list
+
+✅ watch
+📌 Purpose: Kisi resource me live change dekhna (continuous stream)
+📦 Example:
+
+
+kubectl get pods -w       # live dekhne ke liye jab pods create/delete ho rahe
+
+✅ create
+📌 Purpose: Naya resource banana
+📦 Example:
+
+
+kubectl run pod-name nginx --image=nginx
+kubectl apply -f pod.yaml   
+
+✅ delete
+📌 Purpose: Resource delete karna
+📦 Example:
+
+
+kubectl delete pod my-pod
+kubectl delete -f service.yaml
+
+✅ patch
+📌 Purpose: Resource me chhoti si update karna bina puri YAML file diye
+📦 Example:
+
+kubectl patch pod my-test-pod -p '{"metadata":{"annotations":{"patched-by":"faisal"}}}'
+⚠️ patch mainly JSON format me chhoti update ke liye hota hai
+
+✅ update
+📌 Purpose: Pura resource update karna (replace karna)
+📦 Example:
+
+kubectl replace -f pod.yaml
