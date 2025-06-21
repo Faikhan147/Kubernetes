@@ -10,13 +10,60 @@ metadata:
   name: full-control
   namespace: default
 rules:
-  # Read + Write
-  - apiGroups: ["", "apps", "batch", "networking.k8s.io"]
-    resources: ["pods", "services", "configmaps", "secrets", "persistentvolumeclaims", "deployments", "replicasets", "statefulsets", "ingresses", "jobs", "cronjobs"]
+  # Read + Write access for namespace-scoped resources
+  - apiGroups: ["", "apps", "batch", "networking.k8s.io", "rbac.authorization.k8s.io"]
+    resources:
+      - pods
+      - services
+      - configmaps
+      - secrets
+      - persistentvolumes
+      - persistentvolumeclaims
+      - events
+      - serviceaccounts
+      - limitranges
+      - resourcequotas
+      - deployments
+      - replicasets
+      - statefulsets
+      - daemonsets
+      - controllerrevisions
+      - jobs
+      - cronjobs
+      - ingresses
+      - networkpolicies
+      - ingressclasses
+      - roles
+      - rolebindings
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
-  # Exec permission for kubectl exec
+  # Allow exec into pods
   - apiGroups: [""]
-    resources: [ pods/exec ]
+    resources: ["pods/exec"]
     verbs: ["create"]
+
+  # Allow reading pod logs
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+
+  # Allow port-forwarding into pods
+  - apiGroups: [""]
+    resources: ["pods/portforward"]
+    verbs: ["create"]
+
+  # Allow attaching to pods
+  - apiGroups: [""]
+    resources: ["pods/attach"]
+    verbs: ["create"]
+
+  # Allow reading events (redundant rule just for clarity)
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+
+  # Allow reading endpoints
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch"]
 
