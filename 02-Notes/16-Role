@@ -170,4 +170,3 @@ update	jab apply se existing resource modify ho
 
 Scenario	Required Verb(s)	Works?
 kubectl apply -f file.yaml (new)	create + get	✅ Yes
-kubectl replace -f file.yaml	update	✅ Yes only if update is allowed
