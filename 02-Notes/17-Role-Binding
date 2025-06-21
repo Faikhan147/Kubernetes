@@ -25,6 +25,7 @@ subjects:
   # Bind to a Service Account
   - kind: ServiceAccount
     name: sa
+    apiGroup: ""
     namespace: default
 
 roleRef:
