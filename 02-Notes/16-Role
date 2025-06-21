@@ -17,7 +17,6 @@ rules:
       - services
       - configmaps
       - secrets
-      - persistentvolumes
       - persistentvolumeclaims
       - events
       - serviceaccounts
@@ -89,7 +88,6 @@ rules:
       - persistentvolumeclaims
       - serviceaccounts
       - deployments
-      - replicasets
       - statefulsets
       - ingresses
       - roles
