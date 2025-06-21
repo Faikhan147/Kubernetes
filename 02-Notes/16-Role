@@ -67,3 +67,41 @@ rules:
     resources: ["endpoints"]
     verbs: ["get", "list", "watch"]
 
+
+for inyterview purpose 
+
+
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: full-control
+  namespace: default
+rules:
+  # Read + Write access for namespace-scoped resources
+  - apiGroups: ["", "apps", "networking.k8s.io", "rbac.authorization.k8s.io"]
+    resources:
+      - pods
+      - services
+      - configmaps
+      - secrets
+      - persistentvolumes
+      - persistentvolumeclaims
+      - serviceaccounts
+      - deployments
+      - replicasets
+      - statefulsets
+      - ingresses
+      - roles
+      - rolebindings
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+  # Allow exec into pods
+  - apiGroups: [""]
+    resources: ["pods/exec", "pods/attach", "pods/portforward", ]
+    verbs: ["create"]
+
+  # Allow reading pod logs
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
