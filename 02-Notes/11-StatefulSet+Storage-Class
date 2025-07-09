@@ -50,6 +50,13 @@ spec:
       labels:
         app: mysql
     spec:
+      initContainers:
+      - name: mysql-cleanup
+        image: busybox
+        command: ["sh", "-c", "rm -rf /var/lib/mysql/*"]
+        volumeMounts:
+        - name: mysql-sc-pvc
+          mountPath: /var/lib/mysql
       containers:
         - name: mysql
           image: mysql:5.7
