@@ -1,0 +1,61 @@
+kubectl get pods -n my-applications
+
+kubectl get pods -n elk-stack-logging
+
+
+# Commands to check logs from my-applications namespace 
+
+
+kubectl logs -n elk-stack-logging filebeat-c9dd6 -f | grep my-applications
+
+
+kubectl logs -n elk-stack-logging logstash-dbbfb77fc-ptnnj -f | grep my-applications
+
+
+kubectl exec -n elk-stack-logging -it elasticsearch-0 -- \
+  curl -s "http://localhost:9200/_cat/indices?v"
+
+
+
+
+
+kubectl exec -n elk-stack-logging -it elasticsearch-0 -- \
+  curl -s -X POST "http://localhost:9200/filebeat-my-applications-namespace-logs-raw-2025.08.30/_search?pretty" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "size": 0,
+    "query": {
+      "term": { "k8s_namespace.keyword": "my-applications" }
+    },
+    "aggs": {
+      "by_pod": {
+        "terms": { "field": "k8s_pod.keyword", "size": 20 }
+      }
+    }
+  }'
+
+
+
+# Commands to check logs only from my-applications namespace
+
+
+kubectl logs -n elk-stack-logging filebeat-c9dd6 --tail=20 | grep -v "my-applications"
+
+
+kubectl logs -n elk-stack-logging logstash-dbbfb77fc-ptnnj --tail=150 | grep -v "my-applications"
+
+
+
+kubectl exec -n elk-stack-logging -it elasticsearch-0 -- \
+curl -s "http://localhost:9200/filebeat-my-applications-namespace-logs-raw-*/_search?pretty" \
+-H 'Content-Type: application/json' \
+-d '{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must_not": [
+        { "term": { "k8s_namespace.keyword": "my-applications" } }
+      ]
+    }
+  }
+}'
