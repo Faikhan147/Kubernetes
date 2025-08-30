@@ -1,0 +1,147 @@
+# ==================== Elasticsearch (3-node-cluster-production) ====================
+
+nano elasticsearch.yaml
+kubectl apply -f elasticsearch.yaml
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+  namespace: elk-stack-logging
+data:
+  elasticsearch.yml: |-
+    cluster.name: "elk-cluster"
+    network.host: 0.0.0.0
+    http.port: 9200
+
+    # Node specific names (StatefulSet me pod ordinal use hoga)
+    node.name: ${HOSTNAME}
+
+    # Paths for data and logs
+    path.data: /usr/share/elasticsearch/data
+    path.logs: /usr/share/elasticsearch/logs
+
+    # Cluster discovery for multiple nodes
+    discovery.seed_hosts: [
+      "elasticsearch-0.elasticsearch-headless.elk-stack-logging.svc.cluster.local",
+      "elasticsearch-1.elasticsearch-headless.elk-stack-logging.svc.cluster.local",
+      "elasticsearch-2.elasticsearch-headless.elk-stack-logging.svc.cluster.local"
+    ]
+
+    cluster.initial_master_nodes: ["elasticsearch-0", "elasticsearch-1", "elasticsearch-2"]
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-headless
+  namespace: elk-stack-logging
+spec:
+  clusterIP: None       # Headless service
+  ports:
+    - port: 9200
+      targetPort: 9200
+      name: http
+    - port: 9300
+      targetPort: 9300
+      name: transport
+  selector:
+    app: elasticsearch
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  namespace: elk-stack-logging
+spec:
+  ports:
+    - port: 9200
+      targetPort: 9200
+      name: http
+    - port: 9300
+      targetPort: 9300
+      name: transport
+  selector:
+    app: elasticsearch
+
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: elasticsearch-sc
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+parameters:
+  type: gp3
+  fsType: ext4
+  iops: "3000"            
+  throughput: "125"
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  namespace: elk-stack-logging
+spec:
+  serviceName: "elasticsearch-headless"
+  replicas: 3         # 👈 Prod ke liye
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      securityContext:               # 👈 Pod-level security context
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+          ports:
+            - containerPort: 9200
+              name: http
+            - containerPort: 9300
+              name: transport
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              subPath: elasticsearch.yml
+            - name: elasticsearch-data
+              mountPath: /usr/share/elasticsearch/data
+          securityContext:           # 👈 Container-level (optional but safer)
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+      volumes:
+        - name: config
+          configMap:
+            name: elasticsearch-config
+  volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: elasticsearch-sc
+
