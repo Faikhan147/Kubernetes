@@ -1,0 +1,137 @@
+# ==================== Filebeat (DaemonSet for to collect logs only from my-applications namespace) ====================
+
+nano filebeat.yaml
+kubectl apply -f filebeat.yaml
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: filebeat
+  namespace: elk-stack-logging
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: filebeat
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "namespaces", "nodes"]
+    verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: filebeat
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: filebeat
+subjects:
+  - kind: ServiceAccount
+    name: filebeat
+    namespace: elk-stack-logging
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: elk-stack-logging
+  labels:
+    k8s-app: filebeat
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+      - type: container
+        enabled: true
+        paths:
+          - /var/log/containers/*.log
+        # Namespace filter agar specific chahiye
+        # include_namespace: ["my-applications"]
+
+        processors:
+          - add_kubernetes_metadata:
+              host: ${NODE_NAME}
+              matchers:
+                - logs_path:
+                    logs_path: "/var/log/containers/"
+
+    output.logstash:
+      hosts: ["logstash.elk-stack-logging.svc:5044"]
+
+    setup.template.enabled: false
+    logging.to_files: false
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat
+  namespace: elk-stack-logging
+  labels:
+    k8s-app: filebeat
+spec:
+  selector:
+    matchLabels:
+      k8s-app: filebeat
+  template:
+    metadata:
+      labels:
+        k8s-app: filebeat
+    spec:
+      serviceAccountName: filebeat
+      terminationGracePeriodSeconds: 30
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+          effect: "NoSchedule"
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      containers:
+        - name: filebeat
+          image: docker.elastic.co/beats/filebeat:7.17.15
+          imagePullPolicy: IfNotPresent
+          args: ["-c", "/etc/filebeat.yml", "-e"]
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          securityContext:
+            runAsUser: 0
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "200Mi"
+            limits:
+              cpu: "1"
+              memory: "500Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/filebeat.yml
+              readOnly: true
+              subPath: filebeat.yml
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+            - name: data
+              mountPath: /usr/share/filebeat/data
+      volumes:
+        - name: config
+          configMap:
+            name: filebeat-config
+            defaultMode: 0600
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: data
+          emptyDir: {}
