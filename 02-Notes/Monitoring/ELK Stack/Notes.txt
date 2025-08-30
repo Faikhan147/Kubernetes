@@ -1,0 +1,212 @@
+ELK STACK NOTES
+
+1. In Filebeat ConfigMap file this below confirms that logs sends to logtash
+
+    output.logstash:
+      hosts: ["logstash.elk-stack-logging.svc.cluster.local:5044"]
+
+
+2. By default, Logstash automatically sabhi sources se logs collect nahi karta.
+
+Tumhe input plugin specify karna hi padta hai.
+
+Agar tum sirf beats likhoge → sirf Filebeat se lega.
+
+Logstash ko kaise pata chalta hai ki Filebeat se logs aa rahe hain?
+Ye Logstash pipeline config se pata chalta hai.
+Example:
+
+input {
+  beats {
+    port => 5044
+  }
+}
+👉 Is line ka matlab:
+
+Logstash ek beats plugin (jaise Filebeat, Winlogbeat etc.) se data accept karega.
+
+Port 5044 wo hai jahan Filebeat apna data bhejta hai.
+
+Matlab, agar tumne input me beats dala hai → Logstash ko pata hai ki Filebeat se logs aa rahe hain. ✅
+
+
+
+Agar tum beats + syslog + http likhoge → sabse lega.
+
+Example:
+
+input {
+  beats {
+    port => 5044   # Filebeat se logs
+  }
+  syslog {
+    port => 514    # Syslog se logs
+  }
+  http {
+    port => 8080   # HTTP input se logs
+  }
+}
+
+
+so, Uske liye tum input block specify karte ho.
+Example: agar sirf Filebeat chahiye → bas beats input rakho.
+Agar sirf syslog chahiye → bas syslog input rakho.
+
+"input { beats { port => 5044 } }" → is line se pata chalta hai ki Filebeat se hi logs aayenge.
+
+Multiple resources lene ke liye tum multiple input blocks likhte ho.
+
+Default behaviour me wo khud se sab nahi lega, tumhe config me define karna hoga.
+
+
+
+3. Filebeat → Logstash → special beats protocol (harbinger format) use karta hai, HTTP/HTTPS nahi. (no http/https).
+
+Logstash → Elasticsearch → REST API  Elasticsearch ke REST API ke liye HTTP/HTTPS scheme mandatory hai jaise  (needs http:// or https://).
+
+
+
+4. Agar aapka Filebeat DaemonSet elk-stack-logging namespace me hai,
+
+To ServiceAccount filebeat bhi elk-stack-logging namespace me hi create hona chahiye.
+
+⚠️ Agar ServiceAccount dusre namespace me (jaise rbac ya logging) banega, to DaemonSet usse use nahi kar paayega aur pods CrashLoopBackOff ya permission denied error denge.
+
+
+
+
+5. elasticsearch.yml ka cluster aur node ka kya matlab hai?
+yaml
+Copy
+Edit
+cluster.name: "elk-cluster"
+node.name: "node-1"
+discovery.type: single-node
+cluster.name → Elasticsearch ka apna logical cluster hota hai (yani ES nodes ka ek group).
+Ye Kubernetes cluster ka naam nahi hota.
+Example: Tumhari EKS cluster ka naam kuch aur hoga, par Elasticsearch ke andar tum apna cluster bana rahe ho elk-cluster naam ka.
+
+node.name → har ek Elasticsearch pod (node) ka unique naam. Agar multiple replicas/pods ho, to node-1, node-2 etc. honge.
+
+
+2. Ports 9200 aur 9300 kyu diye?
+9200 (HTTP API / REST API port) →
+Is port pe tum queries bhejte ho (jaise curl http://elasticsearch:9200)
+Logstash, Kibana, aur tumhare apps isi port pe connect hote hain.
+
+9300 (Transport port) →
+Ye Elasticsearch cluster ke andar nodes aapas me baat karte hain (node-to-node communication).
+Agar tum single-node ES run kar rahe ho, technically 9300 kaam ka nahi hai.
+Agar tum multi-node banaoge, to 9300 required hai taaki nodes ek dusre ko discover karke cluster form kar saken.
+
+👉 Service me dono ports expose kar diye gaye, taaki future me tum multi-node setup chahoge to ready rahe.
+
+3. Elasticsearch:9200 default port hai ya nahi?
+Bilkul ✅
+Elasticsearch ka default REST API port 9200 hai.
+Isiliye tumne Logstash config me likha tha:
+
+ruby
+Copy
+Edit
+hosts => ["http://elasticsearch.elk-stack-logging.svc.cluster.local:9200"]
+Agar tum http://...:9200 likhte ho → iska matlab hai Logstash ES ke REST API ke saath baat karega.
+
+Agar tum 9300 likh dete, to vo galat hota, kyunki 9300 sirf internal cluster comms ke liye hai, external clients ke liye nahi.
+
+
+
+
+
+
+6. koi farq nahi padta.
+
+StatefulSet → stateful apps ke liye (jaise databases: MySQL, PostgreSQL, Cassandra, Elasticsearch, Kafka, MongoDB). Inme data persistence aur stable identity (hostname, storage, order of startup) bahut zaruri hota hai.
+
+🔹 Elasticsearch ka case:
+Elasticsearch ek distributed database / search engine hai → iska har node ka ek role hota hai (master, data, ingest).
+
+Isliye StatefulSet use karna best practice hai prod me.
+
+
+
+7. elasticsearch.yaml is nor mandate if not elastic deployment will use default setting but in prod its better for prod and if we use elasticsearch.yaml we have to connect it in elasticsearch deployment via vars 
+
+
+8. we have to give cluster ip service to elastic search becuae we are connection to kibina 
+
+9. Filebeat & Logstash = DaemonSet (har node se logs lene ke liye).
+
+Elasticsearch = StatefulSet (data store, persistence ke liye).
+
+Kibana = Deployment (UI, sirf ek chahiye, har node pe nahi).
+
+10. Dekho real-time aur architecture ke hisaab se:
+
+Filebeat → DaemonSet 🟢
+(kyunki har node se logs uthani hain, har node pe ek ek Filebeat run hoga)
+
+Elasticsearch → StatefulSet 🟢
+(kyunki isme data store hota hai, har pod ka apna persistent volume chahiye aur stable identity bhi)
+
+Kibana → Deployment 🟢
+(ye sirf UI hai, isko stateful storage ki zarurat nahi, normal deployment best hai)
+
+Logstash → Deployment 🟡
+✅ Generally Deployment use hota hai, kyunki Logstash stateless hota hai — bas input (Filebeat), filter, aur output (Elasticsearch) ka kaam karta hai.
+❌ StatefulSet ki zarurat nahi, unless tumhe har Logstash pod ke alag state/config maintain karne ho (jo rare hai).
+
+👉 To best production setup hoga:
+
+Filebeat (DaemonSet)
+
+Logstash (Deployment)
+
+Elasticsearch (StatefulSet)
+
+Kibana (Deployment)
+
+
+
+
+Setup:
+
+
+
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz"
+tar -xvzf eksctl_$(uname -s)_amd64.tar.gz
+sudo mv eksctl /usr/local/bin
+eksctl version
+
+
+
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster Monitoring --approve
+
+
+Check karo agar koi stack already hai to usse delete karo. Best hoga agar CloudFormation me jaake manually delete karo, warna errors phir se aa sakte hain.
+
+list-stacks --region ap-south-1 | grep ebs-csi-controller-sa
+
+aws cloudformation delete-stack \
+  --stack-name eksctl-Monitoring-addon-iamserviceaccount-kube-system-ebs-csi-controller-sa \
+  --region ap-south-1
+
+
+
+eksctl create iamserviceaccount \
+  --name ebs-csi-controller-sa \
+  --namespace kube-system \
+  --cluster Monitoring \
+  --region ap-south-1 \
+  --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+  --approve
+
+
+
+
+
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.28"
+
+
+kubectl get pods -n kube-system | grep ebs
+
