@@ -1,0 +1,65 @@
+nano kibana.yaml
+kubectl  apply -f kibana.yaml
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-config
+  namespace: elk-stack-logging
+data:
+  kibana.yml: |
+    server.name: kibana
+    server.host: "0.0.0.0"
+    elasticsearch.hosts: [
+      "http://elasticsearch-0.elasticsearch-headless.elk-stack-logging.svc.cluster.local:9200",
+      "http://elasticsearch-1.elasticsearch-headless.elk-stack-logging.svc.cluster.local:9200",
+      "http://elasticsearch-2.elasticsearch-headless.elk-stack-logging.svc.cluster.local:9200"
+    ]
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: elk-stack-logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:7.17.9
+          ports:
+            - containerPort: 5601
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/kibana/config/kibana.yml
+              subPath: kibana.yml
+      volumes:
+        - name: config
+          configMap:
+            name: kibana-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: elk-stack-logging
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5601
+      targetPort: 5601
+      name: http
+  selector:
+    app: kibana
