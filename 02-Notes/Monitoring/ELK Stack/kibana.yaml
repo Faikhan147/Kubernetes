@@ -1,3 +1,5 @@
+# ==================== Kibana ====================
+
 nano kibana.yaml
 kubectl  apply -f kibana.yaml
 
