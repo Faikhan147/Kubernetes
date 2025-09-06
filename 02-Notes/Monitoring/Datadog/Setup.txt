@@ -5,7 +5,7 @@ helm repo add datadog https://helm.datadoghq.com
 helm repo update
 helm upgrade --install datadog-operator datadog/datadog-operator  -n datadog
 kubectl get pods -n datadog
-kubectl create secret generic datadog-secret -n datadog  --from-literal api-key=2758c8dae800e10dfc19818154cf7136    ----> Change this api-key accordingly
+kubectl create secret generic datadog-secret -n datadog  --from-literal api-key=2758c8dae800e10dfc19818154cf7136    #----> Change this api-key accordingly
 kubectl get secret -n datadog
 kubectl get crd datadogagents.datadoghq.com -o jsonpath='{.spec.versions[*].name}'
 
