@@ -13,3 +13,11 @@ kubectl get crd datadogagents.datadoghq.com -o jsonpath='{.spec.versions[*].name
 Click on below URL:
 
 https://ap1.datadoghq.com/
+
+
+
+Then Apply this Metrices
+
+system.cpu.user by {host, Kube_node}
+system.mem.pct_usable by {host, Kube_node}
+system.disk.in_use by {host, Kube_node, device, device_name}
