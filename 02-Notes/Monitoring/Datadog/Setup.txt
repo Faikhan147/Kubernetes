@@ -1,0 +1,15 @@
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+helm version
+
+helm repo add datadog https://helm.datadoghq.com
+helm repo update
+helm upgrade --install datadog-operator datadog/datadog-operator  -n datadog
+kubectl get pods -n datadog
+kubectl create secret generic datadog-secret -n datadog  --from-literal api-key=2758c8dae800e10dfc19818154cf7136
+kubectl get secret -n datadog
+kubectl get crd datadogagents.datadoghq.com -o jsonpath='{.spec.versions[*].name}'
+
+
+Click on below URL:
+
+https://ap1.datadoghq.com/
