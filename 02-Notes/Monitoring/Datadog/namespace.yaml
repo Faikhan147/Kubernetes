@@ -1,0 +1,22 @@
+nano namespace.yaml
+kubectl apply -f namespace.yaml
+
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-applications
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: datadogs
+
+Note : after this namespace deployment 
+
+kubectl create deployment website --replicas=3 --image=faisalkhan35/my-website:1 -n my-applications
+kubectl create deployment app --replicas=3 --image=faisalkhan35/my-app:1 -n my-applications
+
+kubectl expose deployment website --type=LoadBalancer --name=website-lb --port=80 --target-port=80 -n my-applications
+kubectl expose deployment app --type=LoadBalancer --name=app-lb --port=80 --target-port=80 -n my-applications
