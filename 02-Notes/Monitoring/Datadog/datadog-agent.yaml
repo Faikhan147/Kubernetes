@@ -1,0 +1,22 @@
+nano datadog-agent.yaml
+kubectl apply -f datadog-agent.yaml
+
+
+apiVersion: datadoghq.com/v2alpha1
+kind: DatadogAgent
+metadata:
+  name: datadog
+  namespace: datadog
+spec:
+  global:
+    site: "ap1.datadoghq.com"
+    credentials:
+      apiSecret:
+        secretName: "datadog-secret"
+        keyName: "api-key"
+  features:
+    apm:
+      enabled: true          # just enable APM, no targets block
+    logCollection:
+      enabled: true
+      containerCollectAll: true
