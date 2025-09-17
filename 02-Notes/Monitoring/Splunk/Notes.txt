@@ -1,1 +1,96 @@
-gg
+Bilkul ✅ — exactly tumne sahi samjha. Main short me confirm kar deta hoon:
+
+HEC URL = Splunk ka ingest endpoint (jahan data bhejna hai).
+
+Token = API key / auth key (jise Splunk allow karta hai).
+
+Fluent Bit / Filebeat / koi bhi agent = ye logs/metrics collect karke HEC URL pe push karta hai.
+
+Flow:
+
+Splunk UI me jaake HTTP Event Collector (HEC) enable karo → Token generate karo.
+
+Apne agent ke config (Fluent Bit values.yaml, Filebeat config, etc.) me:
+
+url = Splunk HEC URL
+
+token = Splunk HEC Token
+
+Agent (DaemonSet) har node se logs collect karega + token ke saath Splunk ko push karega.
+
+Splunk token check karega → match hua to data accept karega → UI me visible hoga.
+
+🔑 Without token Splunk data reject karega (401/403), chahe URL sahi ho.
+🔑 Chahe Fluent Bit ho ya Filebeat, dono ko HEC URL + Token dena padta hai.
+
+
+______________________________________________________________
+
+TO SIGHUP https://www.splunk.com/en_us/download.html
+
+AFTER SIGNUP web ui url = https://www.splunk.com/?locale=en_us
+
+_______________________________________________________
+
+Tumhe karna kya hai
+
+1️⃣ Free trial sign-up karo Splunk Cloud ka
+– jao: https://www.splunk.com/en_us/download/splunk-cloud.html
+
+– “Start Free Trial” → apna email verify karo
+– ek region choose karne ko bolega, e.g. AWS Asia Pacific (Mumbai)
+
+2️⃣ Trial ke baad tumhe ek unique URL milega
+– kuch aise hota hai:
+
+https://prd-xxxxx.splunkcloud.com/en-US/
+
+
+ye hi tumhara Splunk Web UI hai (login karoge to dashboard dikhega)
+
+3️⃣ Iss Web UI me “Settings” option hota hai
+– top bar ke right corner me gear icon/Settings link hota hai
+– “Settings → Data Inputs → HTTP Event Collector” pe jao
+– yahan tum HEC enable kar sakte ho aur New Token bana sakte ho
+
+4️⃣ Usi page pe tumhe apna HEC URL bhi dikhega
+– kuch aise hota hai:
+Account create karo → Email verify → login ho jao.
+
+Ab tum Splunk Web UI pe ho (dashboard).
+
+2️⃣ HEC (HTTP Event Collector) enable karo
+
+Web UI me Settings → Data Inputs pe jao.
+
+Wahan HTTP Event Collector (HEC) dikh raha hoga → click karo.
+
+“Enable” pe click karo agar disabled hai.
+
+3️⃣ Token generate karo
+
+HTTP Event Collector page pe “New Token” button.
+
+Token name do (e.g., eks-logs).
+
+Source type: _json (default chhod sakte ho).
+
+Save karo.
+
+Ab token create ho jayega → page pe Token Value dikhega (copy kar lo).
+
+4️⃣ HEC URL check karo
+
+Ussi HTTP Event Collector page pe top me tumhe apna HEC endpoint URL dikhega, kuch aise:
+
+https://prd-xxxxx.splunkcloud.com:8088
+
+
+(Yehi tumhara <YOUR_SPLUNK_HEC_URL> hai)
+
+url : https://prd-p-3axag.splunkcloud.com
+
+HEC endpoint : https://prd-p-3axag.splunkcloud.com:8088/services/collector/event
+
+
+Token : 44945a63-3a0b-48f0-a1f0-8c92e63a20c9
