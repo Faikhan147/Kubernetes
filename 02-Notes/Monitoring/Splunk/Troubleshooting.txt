@@ -11,7 +11,7 @@ index=main kubernetes.pod_name=website*
 index=main cpu*
 
 
-Testing to git prompt as success
+Testing to get prompt as success
 
 
 curl -v https://prd-p-3axag.splunkcloud.com:8088/services/collector/health
