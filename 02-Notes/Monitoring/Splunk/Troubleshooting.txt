@@ -1,0 +1,17 @@
+kubectl get pods -n splunk
+
+kubectl logs -n splunk fluent-bit-d4vtt
+
+index=main sourcetype=httpevent kubernetes.namespace_name="my-applications"
+index=main kubernetes.pod_name=app*
+index=main kubernetes.pod_name=website*
+index=main cpu*
+
+
+curl -v https://prd-p-3axag.splunkcloud.com:8088/services/collector/health
+
+
+curl -k https://prd-p-3axag.splunkcloud.com:8088/services/collector/event \
+  -H "Authorization: Splunk 44945a63-3a0b-48f0-a1f0-8c92e63a20c9" \       # change the Token accordingly
+  -H "Content-Type: application/json" \
+  -d '{"event":"hello from curl"}'
