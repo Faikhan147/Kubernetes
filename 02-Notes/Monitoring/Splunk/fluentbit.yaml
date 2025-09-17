@@ -90,7 +90,7 @@ data:
         Port        8088
         TLS         On
         TLS.Verify  Off
-        splunk_token       44945a63-3a0b-48f0-a1f0-8c92e63a20c9    # Replace by your Token accordingly
+        splunk_token       44945a63-3a0b-48f0-a1f0-8c92e63a20c9    # Replace by your Token and Token Name accordingly
         splunk_send_raw    Off
         event_index        main
 
