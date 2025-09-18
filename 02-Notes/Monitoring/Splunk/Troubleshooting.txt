@@ -1,3 +1,5 @@
+kubectl get pods -n my-applications
+
 kubectl get pods -n splunk
 
 kubectl logs -n splunk fluent-bit-d4vtt
