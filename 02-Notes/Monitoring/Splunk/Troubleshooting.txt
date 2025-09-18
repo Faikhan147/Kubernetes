@@ -8,8 +8,8 @@ kubectl logs -n splunk fluent-bit-d4vtt
 To check the logs 
 
 index=main sourcetype=httpevent kubernetes.namespace_name="my-applications"
-index=main kubernetes.pod_name=app*
 index=main kubernetes.pod_name=website*
+index=main kubernetes.pod_name=app*
 index=main cpu*
 
 
