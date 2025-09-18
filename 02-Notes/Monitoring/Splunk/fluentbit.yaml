@@ -16,7 +16,7 @@ spec:
       labels:
         app: fluent-bit
     spec:
-      serviceAccountName: fluent-bit
+      serviceAccountName: fluent-bit-sa
       containers:
         - name: fluent-bit
           image: fluent/fluent-bit:2.1.8
