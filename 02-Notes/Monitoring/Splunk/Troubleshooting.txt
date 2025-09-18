@@ -25,3 +25,10 @@ curl -k https://prd-p-3axag.splunkcloud.com:8088/services/collector/event \
 -H "Content-Type: application/json" \
 -d '{"event":"hello from curl"}'
 
+
+
+
+Click on below URL
+
+https://prd-p-3axag.splunkcloud.com
+
