@@ -21,6 +21,7 @@ curl -k https://prd-p-3axag.splunkcloud.com:8088/services/collector/health \
 
 
 curl -k https://prd-p-3axag.splunkcloud.com:8088/services/collector/event \
-  -H "Authorization: Splunk 44945a63-3a0b-48f0-a1f0-8c92e63a20c9" \       
-  -H "Content-Type: application/json" \
-  -d '{"event":"hello from curl"}'
+-H "Authorization: Splunk 44945a63-3a0b-48f0-a1f0-8c92e63a20c9" \
+-H "Content-Type: application/json" \
+-d '{"event":"hello from curl"}'
+
