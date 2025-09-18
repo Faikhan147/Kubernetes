@@ -16,7 +16,8 @@ index=main cpu*
 Testing to get prompt as success
 
 
-curl -v https://prd-p-3axag.splunkcloud.com:8088/services/collector/health
+curl -k https://prd-p-3axag.splunkcloud.com:8088/services/collector/health \
+  -H "Authorization: Splunk 44945a63-3a0b-48f0-a1f0-8c92e63a20c9"
 
 
 curl -k https://prd-p-3axag.splunkcloud.com:8088/services/collector/event \
