@@ -1,0 +1,27 @@
+1. Create one custom policy named as AmazonEKSClusterAutoscalerPolicy
+
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeAutoScalingInstances",
+        "autoscaling:DescribeLaunchConfigurations",
+        "autoscaling:DescribeTags",
+        "autoscaling:SetDesiredCapacity",
+        "autoscaling:TerminateInstanceInAutoScalingGroup",
+        "ec2:DescribeLaunchTemplateVersions"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+
+
+2. Attach this policy to nodegroup role example here i attched role to my nodes role name is staging-eks-node-role
+3. After deployment, run this command to tell the cluster not to delete or move the Cluster Autoscaler pod, even if nodes are drained or rescheduled.
+
+kubectl annotate deployment cluster-autoscaler -n kube-system cluster-autoscaler.kubernetes.io/safe-to-evict="false"
