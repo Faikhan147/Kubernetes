@@ -8,7 +8,7 @@ metadata:
   name: cluster-autoscaler
   namespace: kube-system
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::584868042761:role/staging-eks-node-role   # This sa we attached to noded role here rolename is staging-eks-node-role
+    eks.amazonaws.com/role-arn: arn:aws:iam::584868042761:role/staging-eks-node-role   # This sa we attached to noded role here rolename is staging-eks-node-role but change the command according to role name  
 
 ---
 
