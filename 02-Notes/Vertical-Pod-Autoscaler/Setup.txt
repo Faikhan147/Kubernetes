@@ -1,0 +1,85 @@
+Step 1.
+
+Ye policy AmazonEBSCSIDriverPolicy nodes par attach karo
+
+
+Step 2.
+
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.28"
+kubectl get pods -n kube-system | grep ebs
+
+
+Step 3.
+
+# 1️⃣ Ek folder banao
+mkdir ~/vpa-tls && cd ~/vpa-tls
+
+# 2️⃣ CA key aur certificate generate karo (valid 1 year)
+openssl req -x509 -newkey rsa:4096 -nodes \
+  -keyout ca.key -out ca.crt \
+  -subj "/CN=VPA-CA" \
+  -days 365
+
+# 3️⃣ Server key aur certificate signing request (CSR) banao
+openssl req -newkey rsa:4096 -nodes \
+  -keyout serverKey.pem -out server.csr \
+  -subj "/CN=vpa-admission-controller.kube-system.svc"
+
+# 4️⃣ CSR ko CA se sign karke server certificate banao
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
+  -CAcreateserial -out serverCert.pem -days 365
+
+# 5️⃣ Secret create karo (CA + Server Cert + Server Key)
+kubectl create secret generic vpa-tls-certs \
+  --from-file=serverKey.pem=./serverKey.pem \
+  --from-file=serverCert.pem=./serverCert.pem \
+  --from-file=caCert.pem=./ca.crt \
+  -n kube-system
+
+
+Step 4. 
+
+# Clone autoscaler repo
+
+git clone https://github.com/kubernetes/autoscaler.git
+cd autoscaler/vertical-pod-autoscaler/deploy
+
+# Fetch all tags and checkout stable release 1.5.0
+git fetch --all --tags
+git checkout vertical-pod-autoscaler-1.5.0
+kubectl apply -k .
+
+
+Step 5.
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl get pods -n kube-system | grep metrics-server
+
+
+
+Step 6.
+
+After Apply all the deployments
+Final check:
+
+
+kubectl get statefulset -n mysql
+kubectl get pods -n mysql
+kubectl get sc
+
+
+kubectl exec -it mysql-0 -n mysql -- /bin/bash
+mysql -u root -p
+show databases;
+
+
+kubectl get pods -n kube-system | grep vpa
+kubectl get crds | grep verticalpodautoscalers
+
+
+kubectl top pods -n mysql
+kubectl get vpa -n mysql
+
+
+
+
