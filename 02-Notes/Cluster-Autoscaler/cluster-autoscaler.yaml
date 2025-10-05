@@ -6,7 +6,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cluster-autoscaler
-  namespace: kube-system                                # we need to create deployment i kube-system as per real time standard for centralized 
+  namespace: kube-system                                # We need to create deployment in kube-system as per real time standard for centralized 
   labels:
     app: cluster-autoscaler
 spec:
@@ -30,9 +30,9 @@ spec:
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
             - --expander=least-waste                                             # Least unused nodes
-            - --balance-similar-node-groups                                      #This add the tags in ncluster nodes ASG to auto detect and schedule the nodes
+            - --balance-similar-node-groups                                      # This add the tags in ncluster nodes ASG to auto detect and schedule the nodes
             - --skip-nodes-with-system-pods=false
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/staging-eks-cluster      # staging-eks-cluster is cluster name
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/staging-eks-cluster      # staging-eks-cluster is cluster name but but change the command according to cluster name 
             - --cluster-name=staging-eks-cluster
           env:
             - name: AWS_REGION
