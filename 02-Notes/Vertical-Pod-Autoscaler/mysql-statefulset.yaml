@@ -1,0 +1,70 @@
+nano mysql-statefulset.yaml
+kubectl apply -f mysql-statefulset.yaml
+
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mysql
+  
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mysql-sc        # clear, production-style name
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer   # production best practice for multi-AZ
+reclaimPolicy: Retain                     # retain DB data on PVC deletion
+parameters:
+  type: gp3
+  fsType: ext4
+  iops: "6000"           # realistic production IOPS for medium DB workload
+  throughput: "250"      # throughput in MiB/s suitable for DB
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: mysql
+spec:
+  serviceName: mysql
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "faisalkhan@786"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+        volumeMounts:
+        - name: mysql-pvc
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-pvc
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 20Gi
+      storageClassName: mysql-sc
