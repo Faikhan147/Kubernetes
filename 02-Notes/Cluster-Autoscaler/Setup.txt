@@ -29,5 +29,5 @@ kubectl annotate deployment cluster-autoscaler -n kube-system cluster-autoscaler
 
 
 kubectl get deployment cluster-autoscaler -n kube-system
-kubectl get pods cluster-autoscaler -n kube-system
+kubectl get pods -n kube-system
 
