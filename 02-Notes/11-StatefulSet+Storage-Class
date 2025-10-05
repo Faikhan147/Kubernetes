@@ -20,6 +20,8 @@ parameters:
 
 NOTE : this droiver need to be  install
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.28"
+and  this policy AmazonEBSCSIDriverPolicy needs to be attach on nodes 
+
 
 
 NOTE: AWS ke liye provisioner: kubernetes.io/aws-ebs valid hai (legacy), but latest versions may use:
