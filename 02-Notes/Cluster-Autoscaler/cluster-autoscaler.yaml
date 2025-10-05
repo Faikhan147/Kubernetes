@@ -1,0 +1,64 @@
+nano cluster-autoscaler.yaml
+kubectl apply -f cluster-autoscaler.yaml
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system                                # we need to create deployment i kube-system as per real time standard for centralized 
+  labels:
+    app: cluster-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-autoscaler
+  template:
+    metadata:
+      labels:
+        app: cluster-autoscaler
+    spec:
+      serviceAccountName: cluster-autoscaler
+      containers:
+        - name: cluster-autoscaler
+          image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.29.0
+          command:
+            - ./cluster-autoscaler
+            - --v=4
+            - --stderrthreshold=info
+            - --cloud-provider=aws
+            - --skip-nodes-with-local-storage=false
+            - --expander=least-waste                                             # Least unused nodes
+            - --balance-similar-node-groups                                      #This add the tags in ncluster nodes ASG to auto detect and schedule the nodes
+            - --skip-nodes-with-system-pods=false
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/staging-eks-cluster      # staging-eks-cluster is cluster name
+            - --cluster-name=staging-eks-cluster
+          env:
+            - name: AWS_REGION
+              value: us-east-1
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi                                  # We set the limits for CA pod as per real time standard
+            requests:
+              cpu: 100m
+              memory: 300Mi
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              readOnly: true
+      volumes:
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs/ca-bundle.crt                    # This CA pod coordinate with cluster APIs for HTTPS connection for that we need ssl certs
+      tolerations:
+        - key: "node-role.kubernetes.io/master"                    # To run CA in master/control-plane optional
+          effect: NoSchedule
+      affinity:                                                    # Helps to schedule CA pods according to the nodegroups optional
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:                        
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: eks.amazonaws.com/nodegroup
+                    operator: Exists
