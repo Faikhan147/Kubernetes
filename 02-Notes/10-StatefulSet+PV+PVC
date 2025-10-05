@@ -150,7 +150,7 @@ spec:
                   - key: topology.kubernetes.io/zone
                     operator: In
                     values:
-                      - ap-south-1b
+                      - ap-south-1b     # Isi Region me StorageClasses volume manuyally create hone chaite
       containers:
         - name: mysql-container
           image: mysql:latest
