@@ -1,0 +1,3 @@
+kubectl logs -n kube-system deploy/vpa-recommender
+kubectl logs -n kube-system deploy/vpa-updater
+kubectl logs -n kube-system deploy/vpa-admission-controller
