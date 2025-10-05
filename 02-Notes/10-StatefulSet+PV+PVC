@@ -43,6 +43,7 @@ spec:
 
 NOTE : this droiver need to be  install
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.28"
+and  this policy AmazonEBSCSIDriverPolicy needs to be attach on nodes 
 
 
 Example: 2. PersistentVolumeClaim (PVC).yaml
