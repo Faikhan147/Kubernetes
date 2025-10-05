@@ -1,0 +1,26 @@
+nano vpa.yaml
+kubectl apply -f vpa.yaml
+
+
+
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: mysql-vpa
+  namespace: mysql
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind:       StatefulSet
+    name:       mysql
+  updatePolicy:
+    updateMode: "Recreate"   # Auto = automatically adjust resources
+  resourcePolicy:
+    containerPolicies:
+    - containerName: "*"
+      minAllowed:
+        cpu: "500m"
+        memory: "512Mi"
+      maxAllowed:
+        cpu: "2"
+        memory: "3Gi"
