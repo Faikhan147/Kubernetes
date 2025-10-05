@@ -1,0 +1,47 @@
+nano app-deployment.yaml
+kubectl apply -f app-deployment.yaml
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: my-applications
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: faisalkhan35/react-app:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-lb
+  namespace: my-applications
+spec:
+  selector:
+    app: app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+
