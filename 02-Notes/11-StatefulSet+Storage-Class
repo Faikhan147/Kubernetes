@@ -90,7 +90,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi
+            storage: 20Gi
         storageClassName: mysql-ebs-pv-0
 
 
