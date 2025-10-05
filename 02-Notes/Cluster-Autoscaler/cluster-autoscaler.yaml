@@ -32,8 +32,8 @@ spec:
             - --expander=least-waste                                             # Least unused nodes
             - --balance-similar-node-groups                                      # This add the tags in ncluster nodes ASG to auto detect and schedule the nodes
             - --skip-nodes-with-system-pods=false
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/staging-eks-cluster      # staging-eks-cluster is cluster name but but change the command according to cluster name 
-            - --cluster-name=staging-eks-cluster
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/eks-cluster      # eks-cluster is cluster name but but change the command according to cluster name 
+            - --cluster-name=eks-cluster
           env:
             - name: AWS_REGION
               value: us-east-1
