@@ -1,0 +1,73 @@
+1️. Metrics Server Apply Command
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+Sirf ye command chalana enough hai HPA ke liye CPU/memory metrics gather karne ke liye.
+
+Kuch aur install karne ki zarurat nahi basic CPU/Memory HPA ke liye.
+
+Haan, cluster me properly kubectl access & cluster nodes ready hone chahiye.
+
+HPA scaling requests ke base pe hota hai, not limits.
+
+Agar requests nahi hai → HPA node CPU metrics ya metrics-server default values use karega → scaling less accurate ho sakti hai
+
+
+
+
+2. Scenario Examples
+Deployment replicas	HPA minReplicas	Result
+2	3	HPA dekhega 2 pods < 3 → immediately scale up to 3 pods
+3	2	Current 3 pods > min 2 → HPA normal behavior, scale up/down based on metrics
+2	2	Normal, pods = 2 initially, HPA can scale up if metrics > threshold
+
+✅ Rule of thumb:
+
+HPA minReplicas hamesha deployment replicas ke equal ya lower ho sakta hai.
+
+Agar minReplicas > deployment replicas → HPA create hone ke baad deployment replicas ko increase kar dega automatically.
+
+
+
+
+3. Deployment replicas 2, HPA min 3, max 5
+
+Current pods = 2 < min 3 → HPA immediately scale up to 3
+
+Agar CPU usage zyada → scale up upto maxReplicas 5
+
+Deployment replicas 3, HPA min 2, max 5
+
+Current pods = 3 > min 2 → HPA normal behavior
+
+CPU < 50% → scale down upto minReplicas 2
+
+CPU > 50% → scale up upto maxReplicas 5
+
+Deployment replicas 2, HPA min 2, max 5
+
+Current pods = 2 = min 2 → HPA scale up if CPU > 50%
+
+CPU < 50% → no scale down (stays at 2)
+
+CPU > 50% → scale up upto 5
+
+✅ Rule: HPA pods ko min-max ke andar scale karta hai, deployment ke initial replicas sirf start ke liye hote hain.
+
+
+
+
+
+4. HPA (HorizontalPodAutoscaler) ek controller hai, pod nahi.
+
+Ye kubernetes controller ke roop me kaam karta hai, jo deployment ke pods ko scale up/down karta hai CPU/memory usage ke hisaab se.
+
+Iska apna separate pod exist nahi karta.
+
+
+
+
+5. HPA controller hai, pod nahi
+
+Deployment ke pods ko scale karne ka kaam HPA karta hai
+
+HPA ka output kubectl get hpa me dikhta hai
