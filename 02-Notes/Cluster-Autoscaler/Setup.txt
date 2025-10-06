@@ -27,7 +27,3 @@
 kubectl annotate deployment cluster-autoscaler -n kube-system cluster-autoscaler.kubernetes.io/safe-to-evict="false"
 
 
-
-kubectl get deployment cluster-autoscaler -n kube-system
-kubectl get pods -n kube-system
-
