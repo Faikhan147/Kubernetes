@@ -1,5 +1,6 @@
 kubectl get statefulset -n mysql
 kubectl get pods -n mysql
+kubectl get pvc -n mysql
 kubectl get sc
 
 
