@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: website
-        image: faisalkhan35/my-website:latest
+        image: faisalkhan35/my-website:2
         resources:
           requests:
             cpu: 100m
