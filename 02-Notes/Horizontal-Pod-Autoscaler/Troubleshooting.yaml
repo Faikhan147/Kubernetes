@@ -1,3 +1,4 @@
 kubectl get pods -n my-applications
 kubectl get svc -n my-applications
 kubectl get hpa -n my-applications
+kubectl top pods -n my-applications
