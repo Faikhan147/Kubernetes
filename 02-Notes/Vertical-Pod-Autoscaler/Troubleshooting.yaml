@@ -1,3 +1,16 @@
-kubectl logs -n kube-system deploy/vpa-recommender
-kubectl logs -n kube-system deploy/vpa-updater
-kubectl logs -n kube-system deploy/vpa-admission-controller
+kubectl get statefulset -n mysql
+kubectl get pods -n mysql
+kubectl get sc
+
+
+kubectl exec -it mysql-0 -n mysql -- /bin/bash
+mysql -u root -p
+show databases;
+
+
+kubectl get pods -n kube-system | grep vpa
+kubectl get crds | grep verticalpodautoscalers
+
+
+kubectl top pods -n mysql
+kubectl get vpa -n mysql
