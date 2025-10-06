@@ -1,2 +1,11 @@
+Step 1.
+
+First delet cuurent metrics server if available by below commnad
+kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+Step 2.
+
+Now deploy the metrics server by below commands
+
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 kubectl get pods -n kube-system | grep metrics-server
