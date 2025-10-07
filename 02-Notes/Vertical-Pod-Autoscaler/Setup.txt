@@ -2,6 +2,7 @@ Step 1.
 
 Ye policy AmazonEBSCSIDriverPolicy nodes par attach karo
 
+
 Step 2.
 
 This should be run for all nodes ids so, run below command to get all nodes instance ids of nodegroup
