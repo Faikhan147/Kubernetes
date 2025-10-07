@@ -2,14 +2,24 @@ Step 1.
 
 Ye policy AmazonEBSCSIDriverPolicy nodes par attach karo
 
-
 Step 2.
+
+This should be run for all nodes ids so, run below command to get all nodes instance ids of nodegroup
+aws ec2 describe-instances --filters "Name=tag:eks:cluster-name,Values=eks-cluster" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].InstanceId" --output text
+
+Note: Change the cluste rname accordingly here my cluster name is eks-cluster
+
+Then run below comand for each node instance ids accordingly
+aws ec2 modify-instance-metadata-options --instance-id i-0b4af85eb2befcc33 --http-tokens required 
+
+
+Step 3.
 
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.28"
 kubectl get pods -n kube-system | grep ebs
 
 
-Step 3.
+Step 4.
 
 # 1️⃣ Ek folder banao
 mkdir ~/vpa-tls && cd ~/vpa-tls
@@ -37,7 +47,7 @@ kubectl create secret generic vpa-tls-certs \
   -n kube-system
 
 
-Step 4. 
+Step 5. 
 
 # Clone autoscaler repo
 
@@ -50,7 +60,7 @@ git checkout vertical-pod-autoscaler-1.5.0
 kubectl apply -k .
 
 
-Step 5.
+Step 6.
 
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 kubectl get pods -n kube-system | grep metrics-server
