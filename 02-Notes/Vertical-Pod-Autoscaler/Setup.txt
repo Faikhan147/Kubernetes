@@ -16,7 +16,8 @@ aws ec2 modify-instance-metadata-options --instance-id i-0b4af85eb2befcc33 --htt
 
 Step 3.
 
-kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.28"
+kubectl apply -k "https://github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.19"
+
 kubectl get pods -n kube-system | grep ebs
 
 
