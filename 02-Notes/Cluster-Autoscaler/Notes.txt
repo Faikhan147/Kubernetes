@@ -169,4 +169,4 @@ Real-time clusters me nodeAffinity: Exists rakha jata hai aur node discovery tag
 4️⃣ Real-time production me usually ye range hoti hai:
 production me real-time company standard min = 2, desired = 2, aur max = 10 hota hai.
 
-NOTE : production me real-time company standard setup hota hai — CA → HPA → VPA (mostly for databases).
+NOTE: production me real-time company standard setup hota hai — CA → HPA → VPA (mostly for databases).
