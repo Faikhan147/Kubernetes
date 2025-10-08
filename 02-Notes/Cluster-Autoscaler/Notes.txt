@@ -158,3 +158,15 @@ CA is tag ko dekhkar auto-discover karta hai.
 Summary (one-liner real-time practice):
 
 Real-time clusters me nodeAffinity: Exists rakha jata hai aur node discovery tags use karke Cluster Autoscaler ko flexible aur multi-nodegroup scaling ke liye enable kiya jata hai, hardcoding avoid karte hain.
+
+
+
+
+8. 
+1️⃣ CA tabhi work karta hai jab node ki capacity khatam ho jaaye aur pods Pending state me chale jaayein.
+2️⃣ CA ASG ke limits (min–max) ke according nodes ko scale karta hai.
+3️⃣ Haan, desired = min mostly real-time me same rakhte hain (stable start ke liye).
+4️⃣ Real-time production me usually ye range hoti hai:
+production me real-time company standard min = 2, desired = 2, aur max = 10 hota hai.
+
+NOTE : production me real-time company standard setup hota hai — CA → HPA → VPA (mostly for databases).
