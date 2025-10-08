@@ -12,12 +12,12 @@ eksctl utils associate-iam-oidc-provider --cluster=eks-cluster --region=us-east-
 
 eksctl create iamserviceaccount --name ebs-csi-controller-sa --namespace kube-system --cluster=eks-cluster --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy --approve --override-existing-serviceaccounts --region=us-east-1
 
-Fetch the role arn by below command 
-aws iam list-roles --query "Roles[?contains(RoleName, 'eksctl-eks-cluster-addon-iamserviceaccount')].Arn" --output text
-
 kubectl create namespace mysql
 
 kubectl create sa ebs-csi-controller-sa -n mysql
+
+Fetch the role arn by below command 
+aws iam list-roles --query "Roles[?contains(RoleName, 'eksctl-eks-cluster-addon-iamserviceaccount')].Arn" --output text
 
 Change the role arn accordingly which you fetch above
 kubectl annotate sa ebs-csi-controller-sa -n mysql eks.amazonaws.com/role-arn=arn:aws:iam::584868042761:role/eksctl-eks-cluster-addon-aws-ebs-csi-driver-Role1-mYNnco6Z4NAF
