@@ -1,17 +1,33 @@
 Step 1.
 
-Ye policy AmazonEBSCSIDriverPolicy nodes par attach karo
- 
+kubectl apply -k "https://github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.19"
+kubectl get pods -n kube-system | grep ebs
 
 
 Step 2.
 
-kubectl apply -k "https://github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.19"
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
 
-kubectl get pods -n kube-system | grep ebs
+
+Step 3. 
+
+eksctl utils associate-iam-oidc-provider --cluster=eks-cluster --region=us-east-1 --approve
 
 
-Step 3.
+eksctl create iamserviceaccount --name ebs-csi-controller-sa --namespace kube-system --cluster=eks-cluster --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy --approve --override-existing-serviceaccounts --region=us-east-1
+
+Fetch the role arn by below command 
+aws iam list-roles --query "Roles[?contains(RoleName, 'eksctl-eks-cluster-addon-iamserviceaccount')].Arn" --output text
+
+
+kubectl create sa ebs-csi-controller-sa -n mysql
+
+kubectl annotate sa ebs-csi-controller-sa -n mysql eks.amazonaws.com/role-arn=arn:aws:iam::584868042761:role/eksctl-eks-cluster-addon-aws-ebs-csi-driver-Role1-mYNnco6Z4NAF
+
+
+Step 4.
 
 # 1️⃣ Ek folder banao
 mkdir ~/vpa-tls && cd ~/vpa-tls
@@ -39,7 +55,7 @@ kubectl create secret generic vpa-tls-certs \
   -n kube-system
 
 
-Step 4. 
+Step 5. 
 
 # Clone autoscaler repo
 
@@ -52,16 +68,13 @@ git checkout vertical-pod-autoscaler-1.5.0
 kubectl apply -k .
 
 
-Step 5.
+Step 6.
 
 First delet cuurent metrics server if available by below commnad
 kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 kubectl get pods -n kube-system | grep metrics-server
-
-
-
 
 
 
