@@ -13,5 +13,6 @@ kubectl get pods -n kube-system | grep vpa
 kubectl get crds | grep verticalpodautoscalers
 
 
-kubectl top pods -n mysql
 kubectl get vpa -n mysql
+kubectl top pods -n mysql
+
