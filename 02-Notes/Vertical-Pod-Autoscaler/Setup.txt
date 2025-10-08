@@ -17,7 +17,7 @@ kubectl create namespace mysql
 kubectl create sa ebs-csi-controller-sa -n mysql
 
 Fetch the role arn by below command 
-aws iam list-roles --query "Roles[?contains(RoleName, 'eksctl-eks-cluster-addon-iamserviceaccount')].Arn" --output text
+aws iam list-roles --query "Roles[?contains(RoleName, 'eksctl-eks-cluster-addon-iamserviceaccount')].Arn" --output text   # Change the cluster name accordingly here my cluster name is eks-cluster
 
 Change the role arn accordingly which you fetch above
 kubectl annotate sa ebs-csi-controller-sa -n mysql eks.amazonaws.com/role-arn=arn:aws:iam::584868042761:role/eksctl-eks-cluster-addon-aws-ebs-csi-driver-Role1-mYNnco6Z4NAF
