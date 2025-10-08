@@ -71,3 +71,6 @@ Iska apna separate pod exist nahi karta.
 Deployment ke pods ko scale karne ka kaam HPA karta hai
 
 HPA ka output kubectl get hpa me dikhta hai
+
+
+NOTE: production me real-time company standard setup hota hai — CA → HPA → VPA (mostly for databases).
