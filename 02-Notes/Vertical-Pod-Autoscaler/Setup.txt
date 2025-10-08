@@ -21,7 +21,7 @@ eksctl create iamserviceaccount --name ebs-csi-controller-sa --namespace kube-sy
 Fetch the role arn by below command 
 aws iam list-roles --query "Roles[?contains(RoleName, 'eksctl-eks-cluster-addon-iamserviceaccount')].Arn" --output text
 
-kubectl create namesapce mysql
+kubectl create namespace mysql
 
 kubectl create sa ebs-csi-controller-sa -n mysql
 
