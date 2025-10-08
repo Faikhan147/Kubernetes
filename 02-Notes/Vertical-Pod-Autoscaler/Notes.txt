@@ -137,3 +137,6 @@ minAllowed & maxAllowed → resource limits ko enforce karta, over/under provisi
 
 containerName: "*" → saare containers pe apply hota, scalable aur maintainable approach.
 
+
+
+NOTE: production me real-time company standard setup hota hai — CA → HPA → VPA (mostly for databases).
